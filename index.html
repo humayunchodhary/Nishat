@@ -1,1 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nishat Line</title>
+    <link rel="icon" href="images/logo1.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #faf9f7;
+            --bg-tertiary: #f5f4f2;
+            --bg-footer: #1a1a1a;
+            --text-primary: #2c2c2c;
+            --text-secondary: #6b6b6b;
+            --text-muted: #999999;
+            --border: #e5e3df;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 30px rgba(0,0,0,0.15);
+            --accent: #c49b6c;
+            --gold: #b8862d;
+            --sale-red: #c0392b;
+            --card-bg: #ffffff;
+            --input-bg: #faf9f7;
+            --overlay-bg: rgba(0,0,0,0.25);
+        }
+        body.dark-mode {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #222222;
+            --bg-tertiary: #2a2a2a;
+            --bg-footer: #111111;
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --text-muted: #888888;
+            --border: #333333;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.4);
+            --shadow-md: 0 4px 20px rgba(0,0,0,0.5);
+            --shadow-lg: 0 12px 30px rgba(0,0,0,0.6);
+            --card-bg: #2a2a2a;
+            --input-bg: #2a2a2a;
+            --overlay-bg: rgba(0,0,0,0.4);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+        .container { max-width:1280px; margin:0 auto; padding:0 30px; }
 
+        /* NAVBAR */
+        .navbar {
+            display:flex; justify-content:space-between; align-items:center;
+            padding:16px 50px; background:var(--bg-primary);
+            border-bottom:1px solid var(--border); position:sticky; top:0; z-index:1000;
+        }
+        .logo { height:32px; cursor:pointer; }
+        .nav { display:flex; gap:24px; }
+        .nav a {
+            text-decoration:none; color:var(--text-primary); font-weight:500;
+            font-size:0.8rem; letter-spacing:2px; text-transform:uppercase;
+            transition:color 0.2s;
+        }
+        .nav a:hover, .nav a.active { color:var(--accent); }
+        .sale-link { color:var(--sale-red) !important; font-weight:600; }
+        .icons { display:flex; align-items:center; gap:16px; position:relative; }
+        .search-wrap { position:relative; }
+        .search-wrap input {
+            padding:8px 14px 8px 34px; border:1px solid var(--border);
+            border-radius:25px; font-size:0.8rem; width:180px;
+            background:var(--input-bg); color:var(--text-primary);
+        }
+        .search-icon { position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-muted); }
+        .icon-btn {
+            width:38px; height:38px; border-radius:50%; background:transparent;
+            border:none; cursor:pointer; font-size:1.2rem; color:var(--text-primary);
+            display:inline-flex; align-items:center; justify-content:center;
+            transition: background 0.2s;
+        }
+        .icon-btn:hover { background:var(--bg-tertiary); }
+        .cart-btn { position:relative; }
+        .badge {
+            position:absolute; top:0; right:0; background:var(--sale-red);
+            color:#fff; border-radius:50%; width:18px; height:18px;
+            font-size:0.6rem; display:flex; align-items:center; justify-content:center;
+            transform:translate(30%, -30%);
+        }
+        #theme-toggle { background:transparent; border:1px solid var(--border); font-size:1.2rem; }
+        #menu-toggle { display:none; }
+        .menu-icon { display:none; font-size:1.8rem; cursor:pointer; }
+
+        /* SLIDER – now with <img> tags, one per slide */
+      
+       .slider { height:100vh; max-height:700px; position:relative; overflow:hidden; background:var(--bg-tertiary); }
+        .slides { display:flex; width:300%; height:100%; transition:transform 0.6s; }
+        .slide { width:calc(100%/3); height:100%; position:relative; display:flex; align-items:center; justify-content:center; }
+        .slide img { width:100%; height:100%; object-fit:cover; position:absolute; top:0; left:0; z-index:0; }
+        .slide::before { content:''; position:absolute; inset:0; background:var(--overlay-bg); z-index:1; }
+        .slide-content { position:relative; z-index:2; text-align:center; color:#fff; }
+        .slide-content h1 { font-family:'Playfair Display',serif; font-size:3.5rem; }
+        .btn-slide { display:inline-block; padding:12px 32px; background:#fff; color:#1a1a1a; text-decoration:none; border-radius:30px; font-weight:600; text-transform:uppercase; margin-top:20px; }
+        input[name="slide"] { display:none; }
+        #s1:checked~.slides{transform:translateX(-01%);}
+        #s2:checked~.slides{transform:translateX(-33%);}
+        #s3:checked~.slides{transform:translateX(-67%);}
+        .dots { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; }
+        .dots label { width:10px; height:10px; border-radius:50%; background:rgba(255,255,255,0.5); cursor:pointer; }
+        #s1:checked~.dots label[for="s1"],#s2:checked~.dots label[for="s2"],#s3:checked~.dots label[for="s3"]{background:#fff;}
+
+        /* SECTIONS */
+        section { padding:80px 0; text-align:center; }
+        .section-title { font-family:'Playfair Display',serif; font-size:2.2rem; margin-bottom:10px; color:var(--text-primary); }
+        .section-line { width:50px; height:2px; background:var(--accent); margin:0 auto 30px; }
+
+        /* GRIDS */
+        .cat-grid, .product-grid, .acc-grid, .grid4 { display:grid; gap:24px; }
+        .cat-grid { grid-template-columns:repeat(3,1fr); }
+        .cat { height:380px; background-size:cover; position:relative; border-radius:10px; overflow:hidden; cursor:pointer; }
+        .cat span { position:absolute; bottom:30px; left:30px; color:#fff; font-weight:600; text-transform:uppercase; background:rgba(0,0,0,0.4); padding:8px 20px; }
+
+        /* PRODUCT CARD */
+        .product-grid { grid-template-columns:repeat(4,1fr); }
+        .product-card {
+            background:var(--card-bg); border-radius:10px; overflow:hidden;
+            box-shadow:var(--shadow-sm); transition:transform 0.3s, box-shadow 0.3s;
+            cursor:pointer; position:relative;
+        }
+        .product-card:hover { transform:translateY(-5px); box-shadow:var(--shadow-lg); }
+        .product-img {
+            height:340px; background-size:cover; background-position:center;
+            position:relative; overflow:hidden;
+            transition:transform 0.4s ease;
+        }
+        .product-card:hover .product-img { transform:scale(1.08); }
+        .product-img .overlay {
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.3); opacity:0; transition:opacity 0.3s;
+            display:flex; align-items:center; justify-content:center;
+        }
+        .product-card:hover .overlay { opacity:1; }
+        .overlay button {
+            background:#fff; color:#1a1a1a; border:none; padding:12px 24px;
+            border-radius:25px; font-weight:600; cursor:pointer;
+            transform:translateY(20px); transition:transform 0.3s;
+        }
+        .product-card:hover .overlay button { transform:translateY(0); }
+        .heart-icon {
+            position:absolute; top:10px; right:10px; width:36px; height:36px;
+            background:#fff; border-radius:50%; display:flex; align-items:center;
+            justify-content:center; cursor:pointer; z-index:3; font-size:1rem;
+            color:var(--text-muted); transition:color 0.2s;
+        }
+        .heart-icon.liked { color:#e74c3c; }
+        .sale-tag {
+            position:absolute; top:10px; left:10px; background:var(--sale-red);
+            color:#fff; padding:4px 12px; border-radius:20px; font-size:0.7rem;
+            font-weight:700; z-index:2;
+        }
+        .product-info { padding:16px; text-align:left; }
+        .product-info h4 { font-weight:500; margin-bottom:5px; }
+        .product-info p { color:var(--accent); font-weight:600; }
+        .old-price { text-decoration:line-through; color:var(--text-muted); margin-left:8px; font-weight:400; }
+
+        /* SPLIT, ACCESSORIES, etc */
+        .split { display:grid; grid-template-columns:1fr 1fr; }
+        .split-box { height:420px; background-size:cover; position:relative; cursor:pointer; overflow:hidden; }
+        .split-box::before { content:''; position:absolute; inset:0; background:rgba(0,0,0,0.25); transition:0.3s; }
+        .split-box:hover::before { background:rgba(0,0,0,0.4); }
+        .split-box h2 { font-family:'Playfair Display',serif; font-size:2.4rem; color:#fff; position:absolute; bottom:40px; left:40px; z-index:2; }
+        .split-box a { position:absolute; bottom:20px; left:40px; color:#fff; border:2px solid #fff; padding:8px 20px; border-radius:25px; text-decoration:none; font-weight:600; z-index:2; }
+        .acc-grid { grid-template-columns:repeat(4,1fr); }
+        .acc { height:280px; background-size:cover; border-radius:10px; position:relative; overflow:hidden; transition:transform 0.3s; }
+        .acc:hover { transform:scale(1.03); }
+        .acc-label { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); color:#fff; background:rgba(0,0,0,0.6); padding:6px 20px; }
+        .grid4 { grid-template-columns:repeat(4,1fr); }
+        .look-card { height:320px; background-size:cover; border-radius:10px; transition:transform 0.3s; cursor:pointer; }
+        .look-card:hover { transform:scale(1.03); }
+
+        /* MODAL STYLES */
+        .modal-overlay {
+            position:fixed; top:0; left:0; width:100%; height:100%;
+            background:rgba(0,0,0,0.5); display:flex; align-items:center;
+            justify-content:center; z-index:2000; opacity:0; pointer-events:none;
+            transition:opacity 0.3s;
+        }
+        .modal-overlay.active { opacity:1; pointer-events:auto; }
+        .modal, .form-modal, .bill-modal {
+            background:var(--card-bg); border-radius:15px; padding:30px;
+            width:90%; max-width:800px; max-height:90vh; overflow-y:auto;
+            position:relative; box-shadow:0 20px 40px rgba(0,0,0,0.3);
+        }
+        .form-modal, .bill-modal { max-width:500px; }
+        .modal-close {
+            position:absolute; top:15px; right:20px; font-size:1.8rem;
+            background:none; border:none; color:var(--text-primary); cursor:pointer;
+        }
+        .modal { display:flex; flex-wrap:wrap; }
+        .modal-img { flex:1 1 300px; height:400px; background-size:cover; background-position:center; border-radius:10px; margin-right:30px; }
+        .modal-details { flex:1 1 300px; text-align:left; }
+        .modal-details h2 { font-family:'Playfair Display',serif; font-size:2rem; margin-bottom:10px; }
+        .modal-price { font-size:1.5rem; color:var(--accent); font-weight:600; }
+        .btn { padding:12px 24px; border-radius:25px; font-weight:600; cursor:pointer; border:none; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; }
+        .btn-add { background:var(--accent); color:#fff; }
+        .btn-buy { background:var(--text-primary); color:#fff; }
+        .btn-outline { background:transparent; border:2px solid var(--border); color:var(--text-primary); }
+
+        /* NEWSLETTER with proper img */
+        .newsletter-section { padding:200px 0; color:#fff; position:relative; overflow:hidden; }
+        .newsletter-section img.bg { position:absolute; top: -2px; left:0; width:100%; height:100%; object-fit:cover; z-index:0; }
+        .newsletter-section .content { position:relative; z-index:1; }
+
+        /* OTHER */
+        .about, .contact, .blog, .reviews { background:var(--bg-secondary); }
+        .contact-form input, .contact-form textarea { width:100%; padding:12px; margin:8px 0; border:1px solid var(--border); background:var(--input-bg); color:var(--text-primary); border-radius:6px; }
+        .testimonial { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+        .testimonial-card { background:var(--card-bg); padding:30px; border-radius:10px; width:300px; box-shadow:var(--shadow-sm); }
+        .insta-grid { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; }
+        .insta-grid img { width:100%; border-radius:6px; transition:transform 0.3s; cursor:pointer; }
+        .insta-grid img:hover { transform:scale(1.05); }
+
+        /* TOAST */
+        .toast {
+            position:fixed; bottom:30px; right:30px; background:var(--accent);
+            color:#fff; padding:15px 25px; border-radius:30px;
+            box-shadow:0 10px 20px rgba(0,0,0,0.2); z-index:9999;
+            opacity:0; transition:opacity 0.3s;
+        }
+        .toast.show { opacity:1; }
+
+        /* FOOTER */
+        footer { background:var(--bg-footer); color:#ccc; padding:50px 0; }
+        .footer-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:40px; max-width:1280px; margin:0 auto; padding:0 30px; }
+        .footer-grid h4 { color:#fff; margin-bottom:15px; }
+        .footer-grid a { color:#999; text-decoration:none; display:block; margin:5px 0; }
+
+        /* RESPONSIVE */
+        @media (max-width:1024px) {
+            .product-grid, .acc-grid, .grid4 { grid-template-columns:repeat(2,1fr); }
+            .cat-grid { grid-template-columns:1fr; }
+            .insta-grid { grid-template-columns:repeat(3,1fr); }
+            .modal { flex-direction:column; }
+            .modal-img { margin-right:0; margin-bottom:20px; height:300px; }
+        }
+        @media (max-width:768px) {
+            .navbar { padding:14px 20px; }
+            .menu-icon { display:block; }
+            .nav { display:none; position:absolute; top:100%; left:0; right:0; background:var(--bg-primary); flex-direction:column; padding:16px; }
+            #menu-toggle:checked~.nav { display:flex; }
+            .split { grid-template-columns:1fr; }
+            .footer-grid { grid-template-columns:1fr; }
+            .slide-content h1 { font-size:2rem; }
+        }
+
+
+
+ .marquee_span {
+  display: inline-block;
+  color: goldenrod;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 40px;
+ }
+
+ 
+
+ 
+ </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar" id="navbar">
+    
+    <input type="checkbox" id="menu-toggle">
+    <label for="menu-toggle" class="menu-icon">☰</label>
+    <nav class="nav">
+        <a href="#home" class="active">Home</a>
+        <a href="#shop">Women</a>
+        <a href="#men">Men</a>
+        <a href="#about">About</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact">Contact</a>
+        <a href="#" class="sale-link">SALE</a>
+    </nav>
+     <img src="images/logo.png" alt="Nishat Linen"  class="logo">
+    <div class="icons">
+        <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" placeholder="Search..."></div>
+        <button id="theme-toggle" class="icon-btn">🌙</button>
+        <button class="icon-btn">♡</button>
+        <button class="icon-btn cart-btn" id="cartIcon">
+            🛒
+            <span class="badge" id="cartCount">0</span>
+        </button>
+    </div>
+</header>
+
+<!-- SLIDER (fixed) -->
+<section id="home" class="slider">
+    <input type="radio" name="slide" id="s1" checked><input type="radio" name="slide" id="s2"><input type="radio" name="slide" id="s3">
+    <div class="slides">
+        <div class="slide">
+            <img src="images/banner.jpg" alt="Banner">
+            <div class="slide-content"><span class="tag">MMI KA DII</span><h1>Celebrating Her</h1><p>FLAT 20% OFF</p><a href="#" class="btn-slide">Shop Now</a></div>
+        </div>
+        <div class="slide">
+            <img src="images/hero2.png" alt="Luxury Pret">
+            <div class="slide-content"><h1>Elegance Redefined</h1><p>FLAT 30% OFF</p></div>
+        </div>
+
+        <div class="slide">
+            <img src="images/hero4.png" alt="Love & Culture">
+            <div class="slide-content"><h1>Love & Culture</h1></div>
+        </div>
+        
+    </div>
+    <div class="dots"><label for="s1"></label><label for="s2"></label><label for="s3"></label></div>
+</section>
+
+
+    <marquee behavior="scroll" direction="left" scrollamount="8"  class="marquee_span">
+        MOTHER'S DAY SALE   -    A CELEBRATION OF LOVE, STYLE & FAMILY    -    FREE SHIPPING ON ORDERS ABOVE RS. 3000    -    NEW COLLECTION LAUNCH    -    FLAT 20% OFF ON LUXURY PRET   -   SHOP NOW!
+    </marquee>
+</div>
+</marquee-text>
+<!-- CATEGORIES -->
+<section class="container">
+    <h2 class="section-title">THREE WAYS TO WEAR ELEGANCE</h2><div class="section-line"></div>
+    <div class="cat-grid">
+        <div class="cat" style="background-image:url('images/img2.png')"><span>UNSTITCHED</span></div>
+        <div class="cat" style="background-image:url('images/img1.png')"><span>READY TO WEAR</span></div>
+        <div class="cat" style="background-image:url('images/img3.png')"><span>LUXURY PRET</span></div>
+    </div>
+</section>
+
+<!-- WOMEN PRODUCTS -->
+<section id="shop" class="container">
+    <h2 class="section-title">THEIR'S DAY SALE</h2><div class="section-line"></div>
+    <div class="product-grid" id="womenProducts"></div>
+</section>
+
+<!-- SPLIT -->
+<section class="split">
+    <div class="split-box" style="background-image:url('images/women.png')"><h2>WOMEN</h2><a href="#shop">Shop Women</a></div>
+    <div class="split-box" style="background-image:url('images/men.png')"><h2>MEN</h2><a href="#men">Shop Men</a></div>
+</section>
+
+<!-- ACCESSORIES -->
+<section class="container">
+    <h2 class="section-title">ACCESSORIES</h2><div class="section-line"></div>
+    <div class="acc-grid">
+        <div class="acc" style="background-image:url('images/bags.png')"><span class="acc-label">Bags</span></div>
+        <div class="acc" style="background-image:url('images/footwear.png')"><span class="acc-label">Footwear</span></div>
+        <div class="acc" style="background-image:url('images/bottoms.png')"><span class="acc-label">Bottoms</span></div>
+        <div class="acc" style="background-image:url('images/wraps.png')"><span class="acc-label">Wraps</span></div>
+    </div>
+</section>
+
+<!-- SUMMER LOOKS -->
+<section class="container">
+    <h2 class="section-title">STEP INTO FRESH LOOKS</h2><div class="section-line"></div>
+    <div class="grid4">
+        <div class="look-card" style="background-image:url('images/loan.png')"></div>
+        <div class="look-card" style="background-image:url('images/Luxury.png')"></div>
+        <div class="look-card" style="background-image:url('images/long.png')"></div>
+        <div class="look-card" style="background-image:url('images/white.png')"></div>
+    </div>
+</section>
+
+<!-- MEN -->
+<section id="men" class="container">
+    <h2 class="section-title">MEN'S COLLECTION</h2><div class="section-line"></div>
+    <div class="product-grid" id="menProducts"></div>
+</section>
+
+<!-- UNSTITCHED -->
+<section class="container">
+    <h2 class="section-title">UNSTITCHED FABRICS</h2><div class="section-line"></div>
+    <div class="product-grid" id="unstitchedProducts"></div>
+</section>
+
+<!-- PRINTED -->
+<section class="container">
+    <h2 class="section-title">PRINTED LAWN SUITS</h2><div class="section-line"></div>
+    <div class="product-grid" id="printedProducts"></div>
+</section>
+
+<!-- EMBROIDERED -->
+<section class="container">
+    <h2 class="section-title">EMBROIDERED ELEGANCE</h2><div class="section-line"></div>
+    <div class="product-grid" id="embroideredProducts"></div>
+</section>
+
+<!-- KHUSA -->
+<section class="container">
+    <h2 class="section-title">KHUSA COLLECTION</h2><div class="section-line"></div>
+    <div class="product-grid" id="khusaProducts"></div>
+</section>
+
+<!-- HEELS -->
+<section class="container">
+    <h2 class="section-title">HEELS</h2><div class="section-line"></div>
+    <div class="product-grid" id="heelsProducts"></div>
+</section>
+
+<!-- BAGS -->
+<section class="container">
+    <h2 class="section-title">LUXURY BAGS</h2><div class="section-line"></div>
+    <div class="product-grid" id="bagsProducts"></div>
+</section>
+
+<!-- BOTTOMS -->
+<section class="container">
+    <h2 class="section-title">BOTTOMS</h2><div class="section-line"></div>
+    <div class="product-grid" id="bottomsProducts"></div>
+</section>
+
+<!-- LE BANNER -->
+<div style="background:#1a1a1a; color:#fff; text-align:center; padding:60px;">
+    <h2 style="font-family:'Playfair Display',serif;">LE – A CELEBRATION OF LOVE, STYLE AND CULTURE</h2>
+</div>
+
+<!-- ABOUT US -->
+<section id="about" class="about container">
+    <h2 class="section-title">ABOUT NISHAT</h2><div class="section-line"></div>
+    <p style="max-width:700px; margin:0 auto 30px;">Since 1990, Nishat Linen has been weaving elegance into every thread. We offer premium unstitched, ready‑to‑wear, and luxury pret for the modern individual.</p>
+    <div style="display:flex; gap:20px; justify-content:center; flex-wrap:wrap;">
+        <div style="background:var(--card-bg); padding:30px; width:250px; border-radius:10px;"><h3>🌿 Sustainable</h3><p>Ethically sourced fabrics</p></div>
+        <div style="background:var(--card-bg); padding:30px; width:250px; border-radius:10px;"><h3>🏆 Quality</h3><p>100% pure materials</p></div>
+        <div style="background:var(--card-bg); padding:30px; width:250px; border-radius:10px;"><h3>🚚 Free Delivery</h3><p>On orders above Rs.3000</p></div>
+    </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews container">
+    <h2 class="section-title">WHAT THEY SAY</h2><div class="section-line"></div>
+    <div class="testimonial">
+        <div class="testimonial-card">"Stunning quality and design! My go‑to brand for weddings."<br>— Ayesha K.</div>
+        <div class="testimonial-card">"The luxury pret collection is breathtaking. Fast delivery too."<br>— Omar R.</div>
+        <div class="testimonial-card">"Finally, a brand that understands modern elegance."<br>— Zara M.</div>
+    </div>
+</section>
+
+<!-- INSTAGRAM -->
+<section id="blog" class="blog container">
+    <h2 class="section-title">FROM OUR FEED</h2><div class="section-line"></div>
+    <div class="insta-grid">
+        <img src="images/feed2.png" alt="insta1"><img src="images/feed.png" alt="insta2"><img src="images/feed6.png" alt="insta3">
+        <img src="images/feed3.png" alt="insta4"><img src="images/feed4.png" alt="insta5"><img src="images/feed5.png" alt="insta6">
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact container">
+    <h2 class="section-title">GET IN TOUCH</h2><div class="section-line"></div>
+    <form class="contact-form" style="max-width:500px; margin:0 auto;">
+        <input type="text" placeholder="Name"><input type="email" placeholder="Email">
+        <textarea rows="5" placeholder="Message"></textarea>
+        <button style="padding:14px 30px; background:var(--accent); color:#fff; border:none; border-radius:25px; cursor:pointer;">Send Message</button>
+    </form>
+</section>
+
+<!-- NEWSLETTER (img as background) -->
+<section class="newsletter-section">
+    <img src="images/footer.png" class="bg" alt="" style="padding: 11px; margin: 10,10,40,10;">
+    <div class="content">
+        <h2 class="section-title" style="color:#fff;">KEEP ME UPDATED</h2>
+        <input type="email" placeholder="Your email" style="padding:14px 20px; width:300px; border-radius:30px; border:none;">
+        <button style="padding:14px 30px; background:var(--accent); color:#fff; border:none; border-radius:30px; margin-left:10px;">Subscribe</button>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<div style="display:flex; justify-content:space-around; padding:40px; background:var(--bg-tertiary);">
+    <span>📦 Order Tracking</span><span>📍 Store Locator</span><span>📞 24/7 Support</span>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-grid">
+        <div><h4>Company</h4><a href="#">About Us</a><a href="#">Careers</a></div>
+        <div><h4>Help</h4><a href="#">Contact</a><a href="#">Returns</a></div>
+        <div><h4>Newsletter</h4><input type="email" placeholder="Email" style="background:#222; border:1px solid #444; padding:8px; color:#fff;"></div>
+        <div><h4>Follow</h4><a href="#">Instagram</a><a href="#">Facebook</a></div>
+    </div>
+    <p style="text-align:center; margin-top:30px; opacity:0.6;">© 2026 Nishat Linen Clone – All rights reserved.</p>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="modal-overlay" id="detailModal">
+    <div class="modal" id="detailModalContent"></div>
+</div>
+
+<!-- BUY NOW FORM MODAL -->
+<div class="modal-overlay" id="formModal">
+    <div class="form-modal" id="formModalContent"></div>
+</div>
+
+<!-- BILL MODAL -->
+<div class="modal-overlay" id="billModal">
+    <div class="bill-modal" id="billModalContent"></div>
+</div>
+
+<script>
+    // ================ DATA ================
+    const products = {
+        women: [
+            { name: "Printed Lawn Suit", price: 4990, oldPrice: 6240, img: "images/p1.png", discount: "-20%", sku:"001668722104" },
+            { name: "Embroidered Suit", price: 5990, oldPrice: 8560, img: "images/p2.png", discount: "-30%", sku:"001668722105" },
+            { name: "Floral Kurta", price: 3990, oldPrice: null, img: "images/p3.png", discount: null, sku:"001668722106" },
+            { name: "Classic Set", price: 4490, oldPrice: 6415, img: "images/p4.png", discount: "-30%", sku:"001668722107" }
+        ],
+        men: [
+            { name: "Men's Kurta Shalwar Silver", price: 10490, oldPrice: null, img: "images/men1.png", discount: null, sku:"001668722201" },
+            { name: "Men's Kurta Blue", price: 8990, oldPrice: 13990, img: "images/men2.png", discount: "-20%", sku:"001668722202" },
+            { name: "Men's Black Kurta", price: 6290, oldPrice: null, img: "images/men3.png", discount: null, sku:"001668722203" },
+            { name: "Slim Fit Suit", price: 8990, oldPrice: 12000, img: "images/men4.png", discount: "-25%", sku:"001668722204" }
+        ],
+        unstitched: [
+            { name: "Cambric Unstitched", price: 2490, oldPrice: null, img: "images/feed6.png", discount: null, sku:"001668722301" },
+            { name: "Lawn Unstitched", price: 3290, oldPrice: 4290, img: "images/feed4.png", discount: "-20%", sku:"001668722302" },
+            { name: "Silk Unstitched", price: 5990, oldPrice: null, img: "images/feed5.png", discount: null, sku:"001668722303" },
+            { name: "Cotton Unstitched", price: 1890, oldPrice: 2490, img: "images/feed3.png", discount: "-25%", sku:"001668722304" }
+        ],
+        printed: [
+            { name: "Digital Print Kurta", price: 4490, oldPrice: null, img: "images/printed1.png", discount: null, sku:"001668722401" },
+            { name: "Floral Print", price: 4990, oldPrice: 6490, img: "images/printed2.png", discount: "-20%", sku:"001668722402" },
+            { name: "Abstract Print", price: 5490, oldPrice: null, img: "images/printed3.png", discount: null, sku:"001668722403" },
+            { name: "Geometric Print", price: 3990, oldPrice: 5490, img: "images/feed8.png", discount: "-30%", sku:"001668722404" }
+        ],
+        embroidered: [
+            { name: "Zari Embroidered", price: 8990, oldPrice: 12000, img: "images/embro1.png", discount: "-25%", sku:"001668722501" },
+            { name: "Thread Embroidery", price: 7490, oldPrice: null, img: "images/embro2.png", discount: null, sku:"001668722502" },
+            { name: "Mirror Work", price: 9990, oldPrice: 14000, img: "images/feed.png", discount: "-20%", sku:"001668722503" },
+            { name: "Resham Embroidery", price: 6990, oldPrice: 9990, img: "images/feed2.png", discount: "-30%", sku:"001668722504" }
+        ],
+        khusa: [
+            { name: "Black Khusa", price: 3490, oldPrice: null, img: "images/k1.png", discount: null, sku:"001668722601" },
+            { name: "Brown Khusa", price: 4990, oldPrice: 6490, img: "images/k2.png", discount: "-20%", sku:"001668722602" },
+            { name: "Mustard Khusa", price: 5990, oldPrice: null, img: "images/k3.png", discount: null, sku:"001668722603" },
+            { name: "Brown Khusa", price: 2490, oldPrice: 3290, img: "images/k4.png", discount: "-25%", sku:"001668722604" }
+        ],
+        heels: [
+            { name: "Pump Heels", price: 4990, oldPrice: 6990, img: "images/h4.png", discount: "-30%", sku:"001668722701" },
+            { name: "Camel Heels", price: 3990, oldPrice: null, img: "images/h2.png", discount: null, sku:"001668722702" },
+            { name: "Block Heels", price: 4490, oldPrice: 5990, img: "images/hb.png", discount: "-20%", sku:"001668722703" },
+            { name: "Heels", price: 5490, oldPrice: null, img: "images/h1.png", discount: null, sku:"001668722704" }
+        ],
+        bags: [
+            { name: "Leather Bag", price: 7990, oldPrice: 10990, img: "images/bag1.png", discount: "-25%", sku:"001668722801" },
+            { name: "Bag", price: 3490, oldPrice: null, img: "images/bag2.png", discount: null, sku:"001668722802" },
+            { name: "Bag", price: 5490, oldPrice: 7490, img: "images/bag3.png", discount: "-20%", sku:"001668722803" },
+            { name: "Bag", price: 6990, oldPrice: null, img: "images/bag4.png", discount: null, sku:"001668722804" }
+        ],
+        bottoms: [
+            { name: "Wide Leg Trousers", price: 3490, oldPrice: null, img: "images/bottoms.png", discount: null, sku:"001668722901" },
+            { name: "Culottes", price: 3990, oldPrice: null, img: "images/botom1.png", discount: null, sku:"001668722902" },
+            { name: "Palazzo Pants", price: 4490, oldPrice: 5990, img: "images/plazo.png", discount: "-20%", sku:"001668722903" }
+        ]
+    };
+
+    // ================ CART & UTILS ================
+    let cart = [];
+    const cartCountEl = document.getElementById('cartCount');
+    const toastEl = document.getElementById('toast');
+
+    function updateCartBadge() { cartCountEl.textContent = cart.length; }
+    function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        setTimeout(() => toastEl.classList.remove('show'), 2000);
+    }
+
+    function addToCart(productName) {
+        cart.push(productName);
+        updateCartBadge();
+        showToast(`✅ "${productName}" added to cart!`);
+    }
+
+    function toggleHeart(el) {
+        el.classList.toggle('liked');
+        el.textContent = el.classList.contains('liked') ? '♥' : '♡';
+    }
+
+    // ================ MODAL HELPERS ================
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // Close modal on overlay click
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+    });
+
+    // ================ PRODUCT DETAIL MODAL ================
+    function showProductDetail(product) {
+        const html = `
+            <button class="modal-close" onclick="closeModal('detailModal')">✕</button>
+            <div class="modal-img" style="background-image:url('${product.img}')"></div>
+            <div class="modal-details">
+                <h2>${product.name}</h2>
+                <div class="modal-price">Rs. ${product.price.toLocaleString()} ${product.oldPrice ? `<span style="text-decoration:line-through; font-size:1rem; color:var(--text-muted);">Rs. ${product.oldPrice.toLocaleString()}</span>` : ''}</div>
+                <div style="margin:15px 0; color:var(--text-secondary);">SKU: ${product.sku}</div>
+                <p>3 PIECE - DIGITAL PRINTED SUIT<br>Floral Shirt with Dupatta & Trousers<br><small>Shirt: Printed Lawn 3 Meter<br>Dupatta: Digital Printed Muzin 2.5 Meter<br>Trouser: Solid Cambric 2.5 Meter</small></p>
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button class="btn btn-add" onclick="event.stopPropagation(); addToCart('${product.name}')">Add to Cart</button>
+                    <button class="btn btn-buy" onclick="event.stopPropagation(); buyNow('${product.name.replace(/'/g, "\\'")}', ${product.price})">Buy Now</button>
+                    <button class="btn btn-outline" onclick="closeModal('detailModal')">Close</button>
+                </div>
+            </div>
+        `;
+        document.getElementById('detailModalContent').innerHTML = html;
+        openModal('detailModal');
+    }
+
+    // ================ BUY NOW FLOW ================
+    function buyNow(name, price) {
+        closeModal('detailModal');
+        const formHtml = `
+            <button class="modal-close" onclick="closeModal('formModal')">✕</button>
+            <h3 style="font-family:'Playfair Display',serif;">Cash on Delivery</h3>
+            <p><strong>${name}</strong> – Rs. ${price.toLocaleString()}</p>
+            <form id="orderForm">
+                <input type="text" name="fullname" placeholder="Full Name" required>
+                <input type="text" name="address" placeholder="Address" required>
+                <input type="tel" name="phone" placeholder="Phone Number" required>
+                <input type="email" name="email" placeholder="Email (optional)">
+                <button type="submit" class="btn btn-add" style="width:100%; margin-top:10px;">Place Order (COD)</button>
+            </form>
+        `;
+        document.getElementById('formModalContent').innerHTML = formHtml;
+        openModal('formModal');
+
+        document.getElementById('orderForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const user = {
+                name: formData.get('fullname'),
+                address: formData.get('address'),
+                phone: formData.get('phone')
+            };
+            closeModal('formModal');
+            generateBill(name, price, user);
+        });
+    }
+
+    function generateBill(product, price, user) {
+        const html = `
+            <button class="modal-close" onclick="closeModal('billModal')">✕</button>
+            <h2 style="font-family:'Playfair Display',serif;">🎉 Thank You, ${user.name}!</h2>
+            <p>Your order has been placed successfully.</p>
+            <hr style="margin:20px 0;">
+            <p><strong>Product:</strong> ${product}</p>
+            <p><strong>Amount:</strong> Rs. ${price.toLocaleString()}</p>
+            <p><strong>Payment:</strong> Cash on Delivery</p>
+            <p><strong>Delivery to:</strong> ${user.address}</p>
+            <p><strong>Phone:</strong> ${user.phone}</p>
+            <p style="margin-top:20px;">⌛ Estimated delivery: 5-7 business days</p>
+            <button class="btn btn-add" onclick="closeModal('billModal')">Continue Shopping</button>
+        `;
+        document.getElementById('billModalContent').innerHTML = html;
+        openModal('billModal');
+    }
+
+    // ================ RENDER PRODUCT CARDS ================
+    function renderProductSection(containerId, productArray) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        productArray.forEach(prod => {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.setAttribute('data-product', JSON.stringify(prod));
+            card.innerHTML = `
+                <div class="product-img" style="background-image:url('${prod.img}')">
+                    ${prod.discount ? `<span class="sale-tag">${prod.discount}</span>` : ''}
+                    <div class="heart-icon" onclick="event.stopPropagation(); toggleHeart(this)">♡</div>
+                    <div class="overlay" onclick="event.stopPropagation();">
+                        <button onclick="event.stopPropagation(); addToCart('${prod.name}')">Add to Cart</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h4>${prod.name}</h4>
+                    <p>Rs. ${prod.price.toLocaleString()} ${prod.oldPrice ? `<span class="old-price">Rs. ${prod.oldPrice.toLocaleString()}</span>` : ''}</p>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+    }
+
+    // Initialize all sections
+    Object.entries({
+        womenProducts: products.women,
+        menProducts: products.men,
+        unstitchedProducts: products.unstitched,
+        printedProducts: products.printed,
+        embroideredProducts: products.embroidered,
+        khusaProducts: products.khusa,
+        heelsProducts: products.heels,
+        bagsProducts: products.bags,
+        bottomsProducts: products.bottoms
+    }).forEach(([id, data]) => renderProductSection(id, data));
+
+    // Global click on product card (excluding overlay/heart) to open detail modal
+    document.addEventListener('click', function(e) {
+        const card = e.target.closest('.product-card');
+        if (card && !e.target.closest('.overlay') && !e.target.closest('.heart-icon')) {
+            const productData = JSON.parse(card.getAttribute('data-product'));
+            showProductDetail(productData);
+        }
+    });
+
+    // ================ THEME TOGGLE ================
+    const themeToggle = document.getElementById('theme-toggle');
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeToggle.textContent = '☀️';
+    }
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        themeToggle.textContent = isDark ? '☀️' : '🌙';
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('.nav a[href^="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) target.scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+    // Auto slider
+    let current = 1;
+    setInterval(() => {
+        current = current % 3 + 1;
+        document.getElementById('s' + current).checked = true;
+    }, 7000);
+</script>
+</body>
+</html>
